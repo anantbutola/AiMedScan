@@ -1,0 +1,41 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# macOS
+.DS_Store
+
+# datasets
+brain_dataset/
+knee_dataset/
+clinical_dataset/
+datasets/
+
+# models
+models/
+checkpoints/
+*.h5
+*.pth
+*.pt
+*.ckpt
+
+# notebooks
+.ipynb_checkpoints/
+
+# logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# temp
+temp/
+tmp/

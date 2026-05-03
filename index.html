@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAI Scan | Futuristic AI Medical Diagnostics</title>
+    <!-- SEO & Meta -->
+    <meta name="description" content="MedAI Scan: Professional AI-powered medical image analysis for clinical healthcare diagnostics.">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Chart.js for 3rd Column -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-mode">
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass">
+            <div class="logo">
+                <i data-lucide="activity" class="logo-icon"></i>
+                <span class="logo-text">MedAI<span>Scan</span></span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active" data-section="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-link" data-section="upload">
+                    <i data-lucide="upload-cloud"></i>
+                    <span>Upload Scan</span>
+                </a>
+                <a href="#" class="nav-link" data-section="reports">
+                    <i data-lucide="file-text"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="#" class="nav-link" data-section="history">
+                    <i data-lucide="history"></i>
+                    <span>History</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="nav-link" data-section="settings">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="topbar">
+                <div class="search-header">
+                    <i data-lucide="search"></i>
+                    <input type="text" placeholder="Search Patient Records...">
+                </div>
+                <div class="action-header">
+                    <button id="theme-toggle" class="icon-btn-circular" title="Toggle Theme">
+                        <i data-lucide="sun"></i>
+                    </button>
+                    <button id="voice-btn" class="icon-btn-circular" title="Voice Commands">
+                        <i data-lucide="mic"></i>
+                    </button>
+                    <div class="user-pill glass">
+                        <img src="https://api.dicebear.com/9.x/toon-head/svg?seed=Felix" alt="User" class="avatar-sm">
+                        <span>Dr. Rishita</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Section: Dashboard -->
+            <div id="dashboard-section" class="content-section active">
+                <div class="hero-banner glass">
+                    <div class="hero-text">
+                        <h1>Precision Diagnostics Integrated with AI</h1>
+                        <p>Welcome to the future of clinical imaging. Analyze radiographs, MRIs, and CT scans with 99.2% precision using MedAI core.</p>
+                        <div class="hero-actions">
+                            <button class="btn btn-primary" onclick="app.switchSection('upload')">
+                                <i data-lucide="plus"></i> Start New Analysis
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <img src="hero.png" alt="Hero Illustration">
+                        <div class="floating-data-points"></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="summary-card glass">
+                        <div class="card-icon blue"><i data-lucide="activity"></i></div>
+                        <div class="card-data">
+                            <h2 id="total-scans">0</h2>
+                            <p>Total Scans</p>
+                        </div>
+                    </div>
+                    <div class="summary-card glass">
+                        <div class="card-icon green"><i data-lucide="check-circle"></i></div>
+                        <div class="card-data">
+                            <h2>99.2%</h2>
+                            <p>Current Accuracy</p>
+                        </div>
+                    </div>
+                    <div class="summary-card glass">
+                        <div class="card-icon purple"><i data-lucide="zap"></i></div>
+                        <div class="card-data">
+                            <h2 id="avg_speed">0.4s</h2>
+                            <p>Avg. Inference Time</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Analytics Charts -->
+                <div class="dashboard-charts" style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; margin-top: 2rem;">
+                    <div class="dashboard-chart-card glass" style="padding: 1.5rem; border-radius: var(--radius-section);">
+                        <h3 style="margin-bottom: 1rem; color: var(--text-color); font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;"><i data-lucide="pie-chart" style="width: 18px; margin-right: 8px; vertical-align: middle;"></i> Diagnostic Distribution</h3>
+                        <div style="height: 240px; position: relative;"><canvas id="overviewPieChart"></canvas></div>
+                    </div>
+                    
+                    <div class="dashboard-chart-card glass" style="padding: 1.5rem; border-radius: var(--radius-section);">
+                        <h3 style="margin-bottom: 1rem; color: var(--text-color); font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;"><i data-lucide="trending-up" style="width: 18px; margin-right: 8px; vertical-align: middle;"></i> AI Inference Volume (30 Days)</h3>
+                        <div style="height: 240px; position: relative;"><canvas id="volumeLineChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Upload & Analysis -->
+                <div id="upload-section" class="content-section">
+                    <!-- State: IDLE / FILE_LOADED -->
+                    <div id="upload-panel" class="state-panel active">
+                        <div class="panel-header">
+                            <h2>Image Acquisition</h2>
+                            <p>Upload high-resolution medical imaging for neural processing.</p>
+                        </div>
+
+                        <div class="modality-row glass">
+                            <label for="modality-select">Scan Type</label>
+                            <select id="modality-select" class="modality-select">
+                                <option value="chest">Chest X-Ray (CheXpert)</option>
+                                <option value="brain">Brain MRI (BraTS + IXI)</option>
+                                <option value="bone">Bone X-Ray (MURA)</option>
+                                <option value="knee">Knee X-Ray (KL Grade)</option>
+                            </select>
+                        </div>
+                    
+                    <div class="acquisition-grid">
+                        <div class="drop-zone glass" id="drop-zone">
+                            <div class="drop-zone-cta">
+                                <i data-lucide="upload-cloud"></i>
+                                <h3>Acquire Data</h3>
+                                <p>Drag and drop image or DICOM file</p>
+                                <input type="file" id="file-input" hidden accept="image/*">
+                                <div class="btn-group">
+                                    <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">Browse Files</button>
+                                    <button class="btn btn-outline" onclick="app.openDemoModal()">Use Demo Scan</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Dataset Hub (Upgraded to NIH/Kaggle) -->
+                        <div class="dataset-hub glass">
+                            <div class="panel-tag blue">Clinical Dataset Hub</div>
+                            <div class="dataset-info">
+                                <h3>NIH & Kaggle Ground Truth</h3>
+                                <p>Select a validated sample from the NIH ChestX-ray14 or BraTS repository.</p>
+                            </div>
+                            <div class="dataset-samples">
+                                <div class="dataset-controls">
+                    <button class="btn btn-secondary" onclick="app.loadCategory('Chest')">
+                        <i class="lucide-lungs"></i> Chest X-Ray
+                    </button>
+                    <button class="btn btn-secondary" onclick="app.loadCategory('Brain')">
+                        <i class="lucide-brain"></i> Brain MRI
+                    </button>
+                    <button class="btn btn-secondary" onclick="app.loadCategory('Knee')">
+                        <i class="lucide-bone"></i> Knee Joint
+                    </button>
+                    <button class="btn btn-secondary" onclick="app.loadCategory('Hand')">
+                        <i class="lucide-hand"></i> Hand/Bone
+                    </button>
+                </div>
+                <div class="clinical-dataset-grid" id="datasetGrid">
+                    <!-- Dynamic Loading -->
+                    <div class="loading-placeholder">Select a category to view clinical samples...</div>
+                </div>
+                            </div>
+                            <div class="dataset-compliance" style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--glass-border); display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; color: var(--text-muted);">
+                                <i data-lucide="shield-check" style="width: 14px; color: var(--success);"></i>
+                                <span>Compliant with NIH ChestX-ray14 & MURA Standards</span>
+                            </div>
+                        </div>
+
+                        <div class="preview-panel glass hidden" id="preview-panel">
+                            <div class="panel-tag">Source Preview</div>
+                            <div class="image-box">
+                                <img id="src-preview" src="" alt="Source Preview">
+                            </div>
+                            <div class="panel-footer">
+                                <button class="btn btn-danger" id="cancel-upload">Discard</button>
+                                <button class="btn btn-primary" id="start-analysis-btn">Initialize AI Scan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- State: ANALYZING -->
+                <div id="analysis-panel" class="state-panel">
+                    <div class="analysis-layout">
+                        <div class="image-viewer glass">
+                            <div class="viewer-header">
+                                <span class="badge blue">Live Analysis Engine</span>
+                            </div>
+                            <div class="viewport">
+                                <img id="analysis-img" src="" alt="Analyzing...">
+                                <div id="scan-line" class="scan-line"></div>
+                                <div id="heatmap-overlay" class="heatmap-overlay hidden"></div>
+                            </div>
+                        <div class="viewer-footer">
+                            <div class="viewer-controls">
+                                <button class="toggle-btn" id="heatmap-toggle">
+                                    <div class="switch"></div>
+                                    <span>Show Heatmap</span>
+                                </button>
+                                <div class="intensity-control">
+                                    <span>Intensity:</span>
+                                    <input type="range" id="heatmap-intensity" min="0" max="100" value="50">
+                                </div>
+                                <div class="zoom-controls">
+                                    <button class="icon-btn-sm" id="zoom-in"><i data-lucide="zoom-in"></i></button>
+                                    <button class="icon-btn-sm" id="zoom-out"><i data-lucide="zoom-out"></i></button>
+                                </div>
+                            </div>
+                            <div class="heatmap-legend">
+                                <span class="label">Attention Level:</span>
+                                <div class="legend-gradient">
+                                    <span class="l-low">Low</span>
+                                    <div class="gradient-bar"></div>
+                                    <span class="l-high">High</span>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="inference-data glass">
+                            <div class="staged-progress">
+                                <h3>Diagnostic Pipeline</h3>
+                                <div class="stage" id="stage-1">
+                                    <div class="stage-info"><span>Initializing Model...</span><i data-lucide="check"></i></div>
+                                    <div class="stage-bar"><div class="fill"></div></div>
+                                </div>
+                                <div class="stage" id="stage-2">
+                                    <div class="stage-info"><span>Extracting Features...</span><i data-lucide="check"></i></div>
+                                    <div class="stage-bar"><div class="fill"></div></div>
+                                </div>
+                                <div class="stage" id="stage-3">
+                                    <div class="stage-info"><span>Running Inference...</span><i data-lucide="check"></i></div>
+                                    <div class="stage-bar"><div class="fill"></div></div>
+                                </div>
+                                <div class="stage" id="stage-4">
+                                    <div class="stage-info"><span>Generating Results...</span><i data-lucide="check"></i></div>
+                                    <div class="stage-bar"><div class="fill"></div></div>
+                                </div>
+                            </div>
+                            <div class="status-indicator">
+                                <div class="pulse-ring"></div>
+                                <span class="analyzing-text">Processing Clinical Data...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="result-panel" class="state-panel">
+                    <!-- Streamlit-style Alert Banner -->
+                    <div id="pathology-alert-banner" class="alert-banner hidden" style="background-color: #fee2e2; color: #b91c1c; padding: 1rem 1.5rem; border-left: 5px solid #ef4444; border-radius: 6px; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem; font-weight: 600;">
+                        <i data-lucide="alert-triangle"></i>
+                        <span id="alert-banner-text">Pathology Detected: Generating probabilistic readout...</span>
+                    </div>
+
+                    <div class="result-split three-col">
+                        <!-- Column 1: Input Scan -->
+                        <div class="result-card glass">
+                            <div class="r-header"><i data-lucide="image"></i> Input Scan</div>
+                            <div class="r-viewport">
+                                <img id="result-orig-img" src="" alt="Original">
+                            </div>
+                        </div>
+                        
+                        <!-- Column 2: Grad-CAM Result -->
+                        <div class="result-card glass glow">
+                            <div class="r-header"><i data-lucide="flame"></i> Grad-CAM</div>
+                            <div class="r-viewport">
+                                <img id="result-heatmap-img" src="" alt="Heatmap">
+                                <div class="tooltip-hint">Red areas indicate high AI attention</div>
+                            </div>
+                        </div>
+
+                        <!-- Column 3: Probabilities Chart -->
+                        <div class="result-card glass">
+                            <div class="r-header"><i data-lucide="bar-chart-2"></i> Probabilities</div>
+                            <div class="r-viewport" style="background:#fff; padding: 1rem; border-radius: 8px;">
+                                <canvas id="probabilitiesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-metrics">
+                        <div class="metric-group glass">
+                            <div class="prediction-badge" id="result-badge">
+                                <i data-lucide="activity"></i>
+                                <span id="result-finding">Finding Detected</span>
+                            </div>
+                            <div class="confidence-circle">
+                                <div class="circle-val" id="result-percent">0%</div>
+                                <svg><circle cx="40" cy="40" r="35" id="result-circle-svg"></circle></svg>
+                                <span>Confidence</span>
+                            </div>
+                        </div>
+                        <div class="explanation-panel glass">
+                            <h3><i data-lucide="brain"></i> AI Decision Explanation</h3>
+                            <p id="result-explanation">Analyzing pulmonary textures and anatomical markers...</p>
+                            <div class="diagnostic-actions">
+                                <button class="btn btn-outline" id="rescan-btn">New Analysis</button>
+                                <button class="btn btn-primary" id="pdf-btn"><i data-lucide="download"></i> Download Clinical Report</button>
+                            </div>
+                            <!-- Model Intelligence Disclosure -->
+                            <div class="model-disclaimer glass-border" style="margin-top: 1.5rem; padding: 1rem; border-radius: 12px; background: rgba(0,0,0,0.03);">
+                                <span style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">
+                                    <i data-lucide="info" style="width: 12px; vertical-align: middle;"></i> Model Logic Disclosure
+                                </span>
+                                <p style="font-size: 0.7rem; line-height: 1.4; color: var(--text-muted); margin: 0;">
+                                    This AI is <strong>modality-specific</strong> (Chest, Brain, Bone). Select the correct scan type before analysis. It is not an all-purpose diagnostic system.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: History -->
+            <div id="history-section" class="content-section">
+                <div class="section-header">
+                    <h2>Patient Scan History</h2>
+                    <p>Retrieve and manage previous diagnostic records.</p>
+                </div>
+                <div class="history-grid" id="history-grid">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+
+            <!-- Section: Reports -->
+            <div id="reports-section" class="content-section">
+                <div class="section-header">
+                    <h2>Generated Clinical Reports</h2>
+                </div>
+                <div class="reports-list glass" id="reports-list">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+
+            <!-- Section: Settings -->
+            <div id="settings-section" class="content-section">
+                <div class="section-header">
+                    <h2>Dashboard Configuration</h2>
+                </div>
+                <div class="settings-grid">
+                    <div class="settings-group glass">
+                        <h3>Visual Identity</h3>
+                        <div class="setting-item">
+                            <span>High Contrast Mode</span>
+                            <button class="toggle-btn" id="contrast-toggle"><div class="switch"></div></button>
+                        </div>
+                        <div class="setting-item">
+                            <span>Audio Notifications</span>
+                            <button class="toggle-btn active" id="audio-toggle"><div class="switch"></div></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Guided Demo Modal (Root Level to prevent CSS filter clipping) -->
+    <div id="demoModal" class="modal hidden">
+        <div class="modal-content glass">
+            <h2>Guided Demo Setup</h2>
+            <div id="demo-step-1">
+                <p>Select the anatomical region to scan:</p>
+                <div class="demo-grid">
+                    <button class="btn btn-secondary" onclick="app.selectDemoPart('Chest')"><i data-lucide="lungs"></i> Chest</button>
+                    <button class="btn btn-secondary" onclick="app.selectDemoPart('Brain')"><i data-lucide="brain"></i> Brain</button>
+                    <button class="btn btn-secondary" onclick="app.selectDemoPart('Knee')"><i data-lucide="bone"></i> Knee</button>
+                    <button class="btn btn-secondary" onclick="app.selectDemoPart('Hand')"><i data-lucide="hand"></i> Hand</button>
+                </div>
+            </div>
+            <div id="demo-step-2" class="hidden">
+                <p>Select the clinical scenario for <strong id="demo-selected-part" style="color:var(--primary)"></strong>:</p>
+                <div class="demo-grid">
+                    <button class="btn btn-success" style="background: rgba(34,197,94,0.2); border-color: #22c55e" onclick="app.loadDemoProfile('Healthy')">
+                        <i data-lucide="check-circle" style="color:#22c55e"></i> Healthy
+                    </button>
+                    <button class="btn btn-danger" style="background: rgba(239,68,68,0.2); border-color: #ef4444" onclick="app.loadDemoProfile('Unhealthy')">
+                        <i data-lucide="alert-triangle" style="color:#ef4444"></i> Unhealthy
+                    </button>
+                </div>
+                <button class="btn btn-outline" style="margin-top:1.5rem; width:100%" onclick="app.resetDemoModal()">Back to Categories</button>
+            </div>
+            <button class="close-modal icon-btn-circular" onclick="app.closeDemoModal()"><i data-lucide="x"></i></button>
+        </div>
+    </div>
+
+    <!-- Script Import -->
+    <script src="script.js"></script>
+</body>
+</html>
